@@ -1,13 +1,17 @@
 from pydantic import BaseModel
 
-from core.enums.complaint import StatusEnum, SentimentEnum
+from core.enums.complaint import StatusEnum, SentimentEnum, CategoryLiteral
 
 
-class ComplaintCreateSchema(BaseModel):
+class ComplaintInSchema(BaseModel):
     text: str
 
 
-class ComplaintReadSchema(BaseModel):
+class ComplaintCreateSchema(ComplaintInSchema):
+    sentiment: SentimentEnum | None = None
+    category: CategoryLiteral | None = None
+
+
+class ComplaintReadSchema(ComplaintCreateSchema):
     id: int
     status: StatusEnum
-    sentiment: SentimentEnum
