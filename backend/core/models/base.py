@@ -19,4 +19,4 @@ class Base(DeclarativeBase):
         """
         Возвращает название таблицы по имени модели.
         """
-        return f"{cls.__name__.lower()[:-len('Model')]}s"
+        return f"{cls.__name__.lower()}s"

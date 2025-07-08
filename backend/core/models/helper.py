@@ -50,6 +50,7 @@ class DBHelper:
         """
         async with self.session_factory() as session:  # type: AsyncSession
             yield session
+            await session.commit()
 
 
 db_helper = DBHelper(

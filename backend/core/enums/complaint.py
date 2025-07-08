@@ -1,4 +1,5 @@
 from enum import StrEnum
+from typing import Literal
 
 
 class StatusEnum(StrEnum):
@@ -11,3 +12,6 @@ class SentimentEnum(StrEnum):
     negative = "negative"
     neutral = "neutral"
     unknown = "unknown"
+
+
+CategoryLiteral = Literal["Техническая", "Оплата", "Другое"]

@@ -1,10 +1,8 @@
-from typing import Literal
-
 from sqlalchemy import TEXT, func
 from sqlalchemy.orm import Mapped, mapped_column
 
 from .base import Base
-from core.enums.complaint import StatusEnum, SentimentEnum
+from core.enums.complaint import StatusEnum, SentimentEnum, CategoryLiteral
 from datetime import datetime
 
 
@@ -18,4 +16,4 @@ class Complaint(Base):
         server_default=func.now(),
     )
     sentiment: Mapped[SentimentEnum]
-    category: Mapped[Literal["Техническая", "Оплата", "Другое"]]
+    category: Mapped[CategoryLiteral]
