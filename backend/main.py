@@ -4,6 +4,7 @@ from contextlib import asynccontextmanager
 
 import uvicorn
 from fastapi import FastAPI
+from api import router as api_router
 
 from core.config import settings
 
@@ -27,6 +28,7 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
 main_app = FastAPI(
     lifespan=lifespan,
 )
+main_app.include_router(api_router)
 
 
 if __name__ == "__main__":
