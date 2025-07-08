@@ -36,6 +36,18 @@ class LoggingConfig(BaseModel):
         return logging.getLevelNamesMapping()[self.log_level.upper()]
 
 
+class SentinelApi(BaseSettings):
+    url: str = "https://api.apilayer.com/sentiment/analysis"
+    key: str
+    model_config = SettingsConfigDict(
+        env_prefix="api_sentinel_",
+    )
+
+
+class ApiResources(BaseModel):
+    sentinel: SentinelApi = SentinelApi()
+
+
 class ApiV1Prefix(BaseModel):
     prefix: str = "/v1"
     complaints: str = "/complaints"
@@ -62,7 +74,7 @@ class DatabaseConfig(BaseModel):
         """
         Возвращает строку для подключения к базе данных.
         """
-        return f"sqlite+aiosqlite:///db.sqlite3"
+        return f"sqlite+aiosqlite:///../db.sqlite3"
 
 
 class Settings(BaseSettings):
@@ -75,6 +87,7 @@ class Settings(BaseSettings):
     logging: LoggingConfig = LoggingConfig()
     api: ApiPrefix = ApiPrefix()
     db: DatabaseConfig = DatabaseConfig()
+    resources: ApiResources = ApiResources()
 
 
 settings = Settings()
