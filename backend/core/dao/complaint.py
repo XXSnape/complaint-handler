@@ -21,6 +21,7 @@ class ComplaintDao(BaseDAO[Complaint]):
         query = select(self.model).where(
             self.model.timestamp >= hour_ago,
             self.model.status == StatusEnum.open,
+            self.model.category != "Другое",
         )
         result = await self._session.execute(query)
         return result.scalars().all()

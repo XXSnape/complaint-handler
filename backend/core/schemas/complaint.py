@@ -15,7 +15,7 @@ class ComplaintCreateSchema(ComplaintInSchema):
 
 class ComplaintReadSchema(ComplaintCreateSchema):
     id: int
-    # status: StatusEnum
+    status: StatusEnum
 
 
 class ComplaintAllInfoSchema(ComplaintReadSchema):
