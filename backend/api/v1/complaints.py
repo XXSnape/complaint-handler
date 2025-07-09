@@ -5,7 +5,7 @@ from aiohttp import ClientSession
 from fastapi import APIRouter, Depends, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from core.dependencies.client import get_client_session
+from core.dependencies.clients import get_client_session
 from core.models import db_helper
 from core.schemas.complaint import (
     ComplaintInSchema,
@@ -22,6 +22,7 @@ log = logging.getLogger(__name__)
     "",
     status_code=status.HTTP_201_CREATED,
     response_model=ComplaintReadSchema,
+    response_model_exclude_none=True,
 )
 async def create_complaint(
     complaint: ComplaintInSchema,
@@ -29,7 +30,10 @@ async def create_complaint(
         AsyncSession,
         Depends(db_helper.get_async_session),
     ],
-    client_session: Annotated[ClientSession, Depends(get_client_session)],
+    client_session: Annotated[
+        ClientSession,
+        Depends(get_client_session),
+    ],
 ):
     return await create_new_complaint(
         complaint=complaint,
