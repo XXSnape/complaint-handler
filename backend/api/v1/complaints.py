@@ -5,17 +5,38 @@ from aiohttp import ClientSession
 from fastapi import APIRouter, Depends, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from core.dao.complaint import ComplaintDao
 from core.dependencies.clients import get_client_session
 from core.models import db_helper
 from core.schemas.complaint import (
     ComplaintInSchema,
     ComplaintReadSchema,
+    OpenComplaintsSchema,
+    ComplaintAllInfoSchema,
 )
 from services.complaints import create_new_complaint
 
 router = APIRouter(tags=["Complaints"])
 
 log = logging.getLogger(__name__)
+
+
+@router.get("")
+async def get_complaints(
+    session: Annotated[
+        AsyncSession,
+        Depends(db_helper.get_async_session),
+    ],
+):
+    dao = ComplaintDao(session=session)
+    complaints = await dao.get_complaints_in_last_hour()
+
+    return OpenComplaintsSchema(
+        complaints=[
+            ComplaintAllInfoSchema.model_validate(complaint, from_attributes=True)
+            for complaint in complaints
+        ]
+    )
 
 
 @router.post(
@@ -40,3 +61,18 @@ async def create_complaint(
         session=session,
         client_session=client_session,
     )
+
+
+@router.post(
+    "/{complaint_id}",
+    status_code=status.HTTP_204_NO_CONTENT,
+)
+async def change_status(
+    complaint_id: int,
+    session: Annotated[
+        AsyncSession,
+        Depends(db_helper.get_async_session),
+    ],
+):
+    dao = ComplaintDao(session=session)
+    await dao.close_complaint(complaint_id=complaint_id)

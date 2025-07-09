@@ -1,6 +1,38 @@
+import logging
+from typing import Sequence
+
+from fastapi import HTTPException
+from sqlalchemy import select, update
 from .base import BaseDAO
 from core.models import Complaint
+from datetime import datetime, timedelta
+
+from core.enums.complaint import StatusEnum
+from fastapi import status
+
+logger = logging.getLogger(__name__)
 
 
 class ComplaintDao(BaseDAO[Complaint]):
     model = Complaint
+
+    async def get_complaints_in_last_hour(self) -> Sequence[Complaint]:
+        hour_ago = datetime.now() - timedelta(hours=1)
+        query = select(self.model).where(
+            self.model.timestamp >= hour_ago,
+            self.model.status == StatusEnum.open,
+        )
+        result = await self._session.execute(query)
+        return result.scalars().all()
+
+    async def close_complaint(self, complaint_id: int) -> None:
+        logger.info("Закрытие жалобы с ID %s", complaint_id)
+        query = (
+            update(self.model)
+            .where(self.model.id == complaint_id)
+            .values(status="closed")
+        )
+        result = await self._session.execute(query)
+        if result.rowcount == 0:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
+        logger.info("Жалоба с ID %s успешно закрыта", complaint_id)

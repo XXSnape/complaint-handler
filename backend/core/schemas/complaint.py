@@ -1,6 +1,7 @@
 from pydantic import BaseModel
 
 from core.enums.complaint import StatusEnum, SentimentEnum, CategoryLiteral
+from datetime import datetime
 
 
 class ComplaintInSchema(BaseModel):
@@ -14,4 +15,12 @@ class ComplaintCreateSchema(ComplaintInSchema):
 
 class ComplaintReadSchema(ComplaintCreateSchema):
     id: int
-    status: StatusEnum
+    # status: StatusEnum
+
+
+class ComplaintAllInfoSchema(ComplaintReadSchema):
+    timestamp: datetime
+
+
+class OpenComplaintsSchema(BaseModel):
+    complaints: list[ComplaintAllInfoSchema]
