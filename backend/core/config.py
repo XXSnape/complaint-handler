@@ -118,7 +118,7 @@ class DatabaseConfig(BaseModel):
         """
         Возвращает строку для подключения к базе данных.
         """
-        return "sqlite+aiosqlite:///../db.sqlite3"
+        return "sqlite+aiosqlite:///db.sqlite3"
 
 
 class Settings(BaseSettings):
