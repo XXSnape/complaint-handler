@@ -8,9 +8,8 @@ Create Date: 2025-07-08 21:43:26.485365
 
 from typing import Sequence, Union
 
-from alembic import op
 import sqlalchemy as sa
-
+from alembic import op
 
 # revision identifiers, used by Alembic.
 revision: str = "9b2e842fdb78"
@@ -50,7 +49,9 @@ def upgrade() -> None:
         ),
         sa.Column(
             "category",
-            sa.Enum("Техническая", "Оплата", "Другое", native_enum=False),
+            sa.Enum(
+                "Техническая", "Оплата", "Другое", native_enum=False
+            ),
             nullable=False,
         ),
         sa.Column("id", sa.Integer(), nullable=False),

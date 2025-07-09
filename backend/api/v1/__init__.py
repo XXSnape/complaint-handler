@@ -1,6 +1,5 @@
-from fastapi import APIRouter
-
 from core.config import settings
+from fastapi import APIRouter
 
 from .complaints import router as complaints_router
 

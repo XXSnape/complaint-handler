@@ -5,13 +5,12 @@
 import logging
 from collections.abc import AsyncGenerator
 
+from core.config import settings
 from sqlalchemy.ext.asyncio import (
     AsyncSession,
     async_sessionmaker,
     create_async_engine,
 )
-
-from core.config import settings
 
 log = logging.getLogger(__name__)
 
@@ -29,7 +28,8 @@ class DBHelper:
         url: Строка для подключения к базе данных
         echo: Принимает значения True или False
 
-        Если установлен в True, то в консоль будут выводиться запросы к базе. По умолчанию False.
+        Если установлен в True, то в консоль будут
+        выводиться запросы к базе. По умолчанию False.
         """
         self.engine = create_async_engine(
             url=url, echo=echo
@@ -44,7 +44,9 @@ class DBHelper:
         await self.engine.dispose()
         log.info("Database engine disposed")
 
-    async def get_async_session(self) -> AsyncGenerator[AsyncSession, None]:
+    async def get_async_session(
+        self,
+    ) -> AsyncGenerator[AsyncSession, None]:
         """
         Возвращает сессию для асинхронной работы с базой данных.
         """

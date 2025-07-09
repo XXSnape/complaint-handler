@@ -2,20 +2,19 @@ import logging
 from typing import Annotated
 
 from aiohttp import ClientSession
-from fastapi import APIRouter, Depends, status
-from sqlalchemy.ext.asyncio import AsyncSession
-
 from core.dao.complaint import ComplaintDao
 from core.dependencies.clients import get_client_session
 from core.models import db_helper
 from core.schemas.complaint import (
+    ComplaintAllInfoSchema,
     ComplaintInSchema,
     ComplaintReadSchema,
     OpenComplaintsSchema,
-    ComplaintAllInfoSchema,
 )
 from core.schemas.ok import OkSchema
+from fastapi import APIRouter, Depends, status
 from services.complaints import create_new_complaint
+from sqlalchemy.ext.asyncio import AsyncSession
 
 router = APIRouter(tags=["Complaints"])
 
@@ -64,7 +63,10 @@ async def create_complaint(
     )
 
 
-@router.post("/{complaint_id}", response_model=OkSchema)
+@router.post(
+    "/{complaint_id}",
+    response_model=OkSchema,
+)
 async def change_status(
     complaint_id: int,
     session: Annotated[

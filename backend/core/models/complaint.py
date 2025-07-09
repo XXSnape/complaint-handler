@@ -1,9 +1,14 @@
+from datetime import datetime
+
+from core.enums.complaint import (
+    CategoryLiteral,
+    SentimentEnum,
+    StatusEnum,
+)
 from sqlalchemy import TEXT, func
 from sqlalchemy.orm import Mapped, mapped_column
 
 from .base import Base
-from core.enums.complaint import StatusEnum, SentimentEnum, CategoryLiteral
-from datetime import datetime
 
 
 class Complaint(Base):

@@ -1,14 +1,13 @@
 import logging
+from datetime import datetime, timedelta
 from typing import Sequence
 
-from fastapi import HTTPException
-from sqlalchemy import select, update
-from .base import BaseDAO
-from core.models import Complaint
-from datetime import datetime, timedelta
-
 from core.enums.complaint import StatusEnum
-from fastapi import status
+from core.models import Complaint
+from fastapi import HTTPException, status
+from sqlalchemy import select, update
+
+from .base import BaseDAO
 
 logger = logging.getLogger(__name__)
 
@@ -16,7 +15,9 @@ logger = logging.getLogger(__name__)
 class ComplaintDao(BaseDAO[Complaint]):
     model = Complaint
 
-    async def get_complaints_in_last_hour(self) -> Sequence[Complaint]:
+    async def get_complaints_in_last_hour(
+        self,
+    ) -> Sequence[Complaint]:
         hour_ago = datetime.now() - timedelta(hours=1)
         query = select(self.model).where(
             self.model.timestamp >= hour_ago,
@@ -26,7 +27,10 @@ class ComplaintDao(BaseDAO[Complaint]):
         result = await self._session.execute(query)
         return result.scalars().all()
 
-    async def close_complaint(self, complaint_id: int) -> None:
+    async def close_complaint(
+        self,
+        complaint_id: int,
+    ) -> None:
         logger.info("Закрытие жалобы с ID %s", complaint_id)
         query = (
             update(self.model)

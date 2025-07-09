@@ -1,23 +1,24 @@
 import asyncio
 import logging
 
-from aiohttp import ClientSession, ClientResponseError
-from huggingface_hub import AsyncInferenceClient
-from sqlalchemy.ext.asyncio import AsyncSession
-
+from aiohttp import ClientResponseError, ClientSession
 from core.config import settings
 from core.dao.complaint import ComplaintDao
-from core.enums.complaint import SentimentEnum, CategoryLiteral
+from core.enums.complaint import CategoryLiteral, SentimentEnum
 from core.schemas.complaint import (
+    ComplaintCreateSchema,
     ComplaintInSchema,
     ComplaintReadSchema,
-    ComplaintCreateSchema,
 )
+from huggingface_hub import AsyncInferenceClient
+from sqlalchemy.ext.asyncio import AsyncSession
 
 log = logging.getLogger(__name__)
 
 
-async def get_category(text: str) -> CategoryLiteral:
+async def get_category(
+    text: str,
+) -> CategoryLiteral:
     client = AsyncInferenceClient(
         model=settings.resources.hf.model,
         token=settings.resources.hf.token,
@@ -40,7 +41,7 @@ async def get_category(text: str) -> CategoryLiteral:
             return "Техническая"
         if "опл" in content:
             return "Оплата"
-    except Exception as e:
+    except Exception:
         log.exception("Ошибка при определении категории для: %s", text)
     return "Другое"
 

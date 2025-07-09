@@ -1,7 +1,11 @@
-from pydantic import BaseModel
-
-from core.enums.complaint import StatusEnum, SentimentEnum, CategoryLiteral
 from datetime import datetime
+
+from core.enums.complaint import (
+    CategoryLiteral,
+    SentimentEnum,
+    StatusEnum,
+)
+from pydantic import BaseModel
 
 
 class ComplaintInSchema(BaseModel):

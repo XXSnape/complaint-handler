@@ -2,15 +2,13 @@ import logging
 from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
 
+import aiohttp
 import uvicorn
 from aiohttp import ClientTimeout
-from fastapi import FastAPI
 from api import router as api_router
-
 from core.config import settings
-
 from core.models import db_helper
-import aiohttp
+from fastapi import FastAPI
 
 logging.basicConfig(
     level=settings.logging.log_level_value,
