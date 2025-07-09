@@ -44,17 +44,17 @@ class SentinelApi(BaseSettings):
     )
 
 
-class GoogleApi(BaseSettings):
-    key: str
-    model: str = "gemini-2.5-flash"
+class HFSettings(BaseSettings):
+    token: str
+    model: str = "mistralai/Mistral-7B-Instruct-v0.3"
     model_config = SettingsConfigDict(
-        env_prefix="api_google_",
+        env_prefix="hf_",
     )
 
 
 class ApiResources(BaseModel):
     sentinel: SentinelApi = SentinelApi()
-    google: GoogleApi = GoogleApi()
+    hf: HFSettings = HFSettings()
 
 
 class ApiV1Prefix(BaseModel):
