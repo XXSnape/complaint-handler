@@ -2,7 +2,7 @@ import asyncio
 import logging
 
 from aiohttp import ClientSession, ClientResponseError
-from google import genai
+from huggingface_hub import AsyncInferenceClient
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from core.config import settings
@@ -18,21 +18,31 @@ log = logging.getLogger(__name__)
 
 
 async def get_category(text: str) -> CategoryLiteral:
-    client = genai.Client(api_key=settings.resources.google.key)
+    client = AsyncInferenceClient(
+        model=settings.resources.hf.model,
+        token=settings.resources.hf.token,
+    )
     try:
-        result = (
-            await client.aio.models.generate_content(
-                model=settings.resources.google.model,
-                contents=f"Определи категорию этой жалобы: {text}.\n\n"
-                f'Варианты: "Техническая", "Оплата", "Другое". Дай ответ только одним словом.',
-            )
-        ).text.title()
-        if result not in ["Техническая", "Оплата", "Другое"]:
-            return "Другое"
-        return result
+        response = await client.chat_completion(
+            messages=[
+                {
+                    "role": "user",
+                    "content": f"Определи категорию этой жалобы: \n\n{text}\n\n"
+                    f'Варианты: "Техническая", "Оплата", "Другое". '
+                    f"Дай ответ только одним из этих слов.",
+                }
+            ],
+        )
+        content = response.choices[0].message.content.lower()
+        # Бывают случаи, когда модель выдает ответ, который точно не
+        # соответствует ожидаемым категориям
+        if "техн" in content:
+            return "Техническая"
+        if "опл" in content:
+            return "Оплата"
     except Exception as e:
         log.exception("Ошибка при определении категории для: %s", text)
-        return "Другое"
+    return "Другое"
 
 
 async def get_sentiment(
@@ -84,7 +94,10 @@ async def create_new_complaint(
     record = await ComplaintDao(session=session).add(
         model,
     )
-    schema = ComplaintReadSchema.model_validate(record, from_attributes=True)
+    schema = ComplaintReadSchema.model_validate(
+        record,
+        from_attributes=True,
+    )
     if schema.category == "Другое":
         schema.category = None
     return schema

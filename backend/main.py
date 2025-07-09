@@ -20,14 +20,12 @@ logging.basicConfig(
 
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
-    # startup
     async with aiohttp.ClientSession(
         headers={"apikey": settings.resources.sentinel.key},
         timeout=ClientTimeout(total=10),
     ) as client_session:
         app.state.client_session = client_session
         yield
-    # shutdown
     await db_helper.dispose()
 
 
