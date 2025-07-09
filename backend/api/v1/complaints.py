@@ -14,6 +14,7 @@ from core.schemas.complaint import (
     OpenComplaintsSchema,
     ComplaintAllInfoSchema,
 )
+from core.schemas.ok import OkSchema
 from services.complaints import create_new_complaint
 
 router = APIRouter(tags=["Complaints"])
@@ -63,10 +64,7 @@ async def create_complaint(
     )
 
 
-@router.post(
-    "/{complaint_id}",
-    status_code=status.HTTP_204_NO_CONTENT,
-)
+@router.post("/{complaint_id}", response_model=OkSchema)
 async def change_status(
     complaint_id: int,
     session: Annotated[
@@ -76,3 +74,4 @@ async def change_status(
 ):
     dao = ComplaintDao(session=session)
     await dao.close_complaint(complaint_id=complaint_id)
+    return OkSchema()
