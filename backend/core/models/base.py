@@ -7,6 +7,7 @@ class Base(DeclarativeBase):
     """
     Базовый класс для всех моделей SQLAlchemy.
     """
+
     __abstract__ = True
 
     metadata = MetaData(

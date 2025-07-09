@@ -19,6 +19,7 @@ class RunConfig(BaseModel):
     """
     Конфигурация для запуска приложения.
     """
+
     host: str = "0.0.0.0"
     port: int = 8000
 
@@ -27,6 +28,7 @@ class LoggingConfig(BaseModel):
     """
     Конфигурация логирования приложения.
     """
+
     log_level: Literal[
         "debug",
         "info",
@@ -49,6 +51,7 @@ class SentinelApi(BaseSettings):
     """
     Конфигурация для работы с API анализа тональности.
     """
+
     url: str = "https://api.apilayer.com/sentiment/analysis"
     key: str
     model_config = SettingsConfigDict(
@@ -60,6 +63,7 @@ class HFSettings(BaseSettings):
     """
     Конфигурация для работы с Hugging Face API.
     """
+
     token: str
     model: str = "mistralai/Mistral-7B-Instruct-v0.3"
     model_config = SettingsConfigDict(
@@ -71,6 +75,7 @@ class ApiResources(BaseModel):
     """
     Конфигурация для работы с внешними API.
     """
+
     sentinel: SentinelApi = SentinelApi()
     hf: HFSettings = HFSettings()
 
@@ -79,6 +84,7 @@ class ApiV1Prefix(BaseModel):
     """
     Префиксы для API версии 1.
     """
+
     prefix: str = "/v1"
     complaints: str = "/complaints"
 
@@ -87,6 +93,7 @@ class ApiPrefix(BaseModel):
     """
     Конфигурация префиксов для API.
     """
+
     prefix: str = "/api"
     v1: ApiV1Prefix = ApiV1Prefix()
 
@@ -95,6 +102,7 @@ class DatabaseConfig(BaseModel):
     """
     Конфигурация базы данных.
     """
+
     echo: bool = False
 
     naming_convention: dict[str, str] = {
@@ -117,6 +125,7 @@ class Settings(BaseSettings):
     """
     Основные настройки приложения.
     """
+
     run: RunConfig = RunConfig()
     logging: LoggingConfig = LoggingConfig()
     api: ApiPrefix = ApiPrefix()
