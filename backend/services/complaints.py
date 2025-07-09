@@ -56,7 +56,9 @@ async def get_sentiment(
             raise_for_status=True,
         ) as response:
             json = await response.json()
-            return json["sentiment"]
+            result = json["sentiment"]
+            if result in SentimentEnum:
+                return result
     except ClientResponseError as e:
         log.exception(
             "Ошибочный ответ от %s со статус кодом %s",
