@@ -28,6 +28,9 @@ async def get_complaints(
         Depends(db_helper.get_async_session),
     ],
 ):
+    """
+    Выводит список открытых жалоб, которые были созданы в течение последнего часа.
+    """
     dao = ComplaintDao(session=session)
     complaints = await dao.get_complaints_in_last_hour()
 
@@ -56,6 +59,9 @@ async def create_complaint(
         Depends(get_client_session),
     ],
 ):
+    """
+    Создает новую жалобу.
+    """
     return await create_new_complaint(
         complaint=complaint,
         session=session,
@@ -74,6 +80,9 @@ async def change_status(
         Depends(db_helper.get_async_session),
     ],
 ):
+    """
+    Закрывает жалобу по ее ID.
+    """
     dao = ComplaintDao(session=session)
     await dao.close_complaint(complaint_id=complaint_id)
     return OkSchema()

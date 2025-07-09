@@ -9,9 +9,15 @@ logger = logging.getLogger(__name__)
 
 
 class BaseDAO[M: Base]:
+    """
+Базовый класс DAO для работы с моделями SQLAlchemy.
+    """
     model: type[M] | None = None
 
     def __init__(self, session: AsyncSession):
+        """
+        Инициализация DAO сессией SQLAlchemy.
+        """
         self._session = session
         if self.model is None:
             raise ValueError(
@@ -19,6 +25,9 @@ class BaseDAO[M: Base]:
             )
 
     async def add(self, values: BaseModel) -> M:
+        """
+        Добавляет новую запись в базу данных.
+        """
         values_dict = values.model_dump(exclude_unset=True)
         logger.info(
             "Добавление записи %s с параметрами: %s",

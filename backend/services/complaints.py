@@ -19,6 +19,9 @@ log = logging.getLogger(__name__)
 async def get_category(
     text: str,
 ) -> CategoryLiteral:
+    """
+    Определяет категорию жалобы с помощью AI-модели.
+    """
     client = AsyncInferenceClient(
         model=settings.resources.hf.model,
         token=settings.resources.hf.token,
@@ -50,6 +53,9 @@ async def get_sentiment(
     text: str,
     client_session: ClientSession,
 ) -> SentimentEnum:
+    """
+    Определяет тональность текста.
+    """
     try:
         async with client_session.post(
             settings.resources.sentinel.url,
@@ -80,6 +86,9 @@ async def create_new_complaint(
     session: AsyncSession,
     client_session: ClientSession,
 ) -> ComplaintReadSchema:
+    """
+    Создает новую жалобу, определяя ее тональность и категорию.
+    """
 
     sentiment, category = await asyncio.gather(
         get_sentiment(

@@ -18,6 +18,10 @@ logging.basicConfig(
 
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
+    """
+    Устанавливает сессию для aiohttp и сбрасывает соединение
+    с базой данных после завершения работы приложения.
+    """
     async with aiohttp.ClientSession(
         headers={"apikey": settings.resources.sentinel.key},
         timeout=ClientTimeout(total=10),

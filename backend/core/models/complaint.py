@@ -12,6 +12,9 @@ from .base import Base
 
 
 class Complaint(Base):
+    """
+    Модель для хранения информации о жалобах пользователей.
+    """
     text: Mapped[str] = mapped_column(TEXT)
     status: Mapped[StatusEnum] = mapped_column(
         default=StatusEnum.open, server_default=StatusEnum.open

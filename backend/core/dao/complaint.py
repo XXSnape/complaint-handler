@@ -13,11 +13,18 @@ logger = logging.getLogger(__name__)
 
 
 class ComplaintDao(BaseDAO[Complaint]):
+    """
+    DAO для работы с жалобами в базе данных.
+    """
+
     model = Complaint
 
     async def get_complaints_in_last_hour(
         self,
     ) -> Sequence[Complaint]:
+        """
+        Получает список открытых жалоб, созданных в течение последнего часа,
+        """
         hour_ago = datetime.now() - timedelta(hours=1)
         query = select(self.model).where(
             self.model.timestamp >= hour_ago,
@@ -31,6 +38,9 @@ class ComplaintDao(BaseDAO[Complaint]):
         self,
         complaint_id: int,
     ) -> None:
+        """
+        Закрывает жалобу по ID, устанавливая статус "closed".
+        """
         logger.info("Закрытие жалобы с ID %s", complaint_id)
         query = (
             update(self.model)

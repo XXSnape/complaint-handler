@@ -41,8 +41,11 @@ class DBHelper:
         )  # Фабрика сессий для работы с асинхронной базой данных
 
     async def dispose(self) -> None:
+        """
+        Освобождает ресурсы, связанные с базой данных.
+        """
         await self.engine.dispose()
-        log.info("Database engine disposed")
+        log.info("Соединение с базой данных закрыто.")
 
     async def get_async_session(
         self,

@@ -4,6 +4,9 @@ from sqlalchemy.orm import DeclarativeBase, Mapped, declared_attr, mapped_column
 
 
 class Base(DeclarativeBase):
+    """
+    Базовый класс для всех моделей SQLAlchemy.
+    """
     __abstract__ = True
 
     metadata = MetaData(
