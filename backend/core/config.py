@@ -44,8 +44,17 @@ class SentinelApi(BaseSettings):
     )
 
 
+class GoogleApi(BaseSettings):
+    key: str
+    model: str = "gemini-2.5-flash"
+    model_config = SettingsConfigDict(
+        env_prefix="api_google_",
+    )
+
+
 class ApiResources(BaseModel):
     sentinel: SentinelApi = SentinelApi()
+    google: GoogleApi = GoogleApi()
 
 
 class ApiV1Prefix(BaseModel):
@@ -74,7 +83,7 @@ class DatabaseConfig(BaseModel):
         """
         Возвращает строку для подключения к базе данных.
         """
-        return f"sqlite+aiosqlite:///../db.sqlite3"
+        return "sqlite+aiosqlite:///../db.sqlite3"
 
 
 class Settings(BaseSettings):
